@@ -1,0 +1,32 @@
+@import "tailwindcss";
+
+
+.container{
+    @apply max-w-7xl mx-auto px-4
+}
+
+.btn{
+    @apply py-2 px-4 rounded-md cursor-pointer
+}
+
+.btn-primary{
+    @apply bg-slate-800 text-white hover:bg-slate-700
+}
+
+.btn-ghost{
+    @apply hover:bg-slate-50 text-slate-800
+}
+
+.btn-outline{
+    @apply border border-slate-300 hover:bg-slate-50
+}
+
+label{
+    @apply block text-slate-800 font-semibold mb-1
+}
+
+input,select{
+    @apply border border-slate-300 px-3 py-2 rounded-md focus:outline-none focus:border-2
+    focus:border-slate-500 placeholder:text-sm
+}
+
