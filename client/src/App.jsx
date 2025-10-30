@@ -12,6 +12,8 @@ import AddProductForm from "./pages/adminpages/AddProductForm";
 import CategoryList from "./pages/adminpages/CategoryList";
 import AddCatgeoryForm from "./pages/adminpages/AddCatgeoryForm";
 import { Toaster } from "react-hot-toast";
+import ProtectedRoute from "./utils/ProtectedRoute";
+import AdminRoute from "./utils/AdminRoute";
 
 const App = () => {
   return (
@@ -28,11 +30,22 @@ const App = () => {
 
         {/* admin layout */}
         <Route element={<AdminLayout />}>
-          <Route path="/dashboard/main" element={<Main />} />
-          <Route path="/dashboard/products/list" element={<ProductList />} />
-          <Route path="/dashboard/products/add" element={<AddProductForm />} />
-          <Route path="/dashboard/categories/list" element={<CategoryList />} />
-          <Route path="/dashboard/categories/add" element={<AddCatgeoryForm />} />
+          <Route element={<AdminRoute />}>
+            <Route path="/dashboard/main" element={<Main />} />
+            <Route path="/dashboard/products/list" element={<ProductList />} />
+            <Route
+              path="/dashboard/products/add"
+              element={<AddProductForm />}
+            />
+            <Route
+              path="/dashboard/categories/list"
+              element={<CategoryList />}
+            />
+            <Route
+              path="/dashboard/categories/add"
+              element={<AddCatgeoryForm />}
+            />
+          </Route>
         </Route>
       </Routes>
     </div>

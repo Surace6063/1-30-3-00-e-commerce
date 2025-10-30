@@ -4,9 +4,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { loginFormValidationSchema } from "../utils/validate";
 import { apiRequest } from "../utils/apiRequest";
 import toast from "react-hot-toast";
-import { useDispatch } from "react-redux";
-import { login } from "../redux/authSlice";
 import { ThreeDots } from "react-loader-spinner";
+import { useUserStore } from "../zustand/userStore";
 
 const Login = () => {
   const {
@@ -18,13 +17,13 @@ const Login = () => {
   });
 
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const {login} = useUserStore()
 
   const handleLogin = async (data) => {
     try {
       const response = await apiRequest.post("/auth/login/", data);
       console.log(response.data);
-      dispatch(login(response.data));
+      login(response.data)
       toast.success("Login successful!");
       navigate("/");
     } catch (err) {
@@ -72,6 +71,7 @@ const Login = () => {
         </div>
 
         <button
+        type="submit"
           disabled={isSubmitting}
           className="btn btn-primary w-full flex justify-center items-center disabled:cursor-not-allowed"
         >

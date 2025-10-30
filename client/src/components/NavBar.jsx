@@ -2,27 +2,25 @@ import { useState } from "react";
 import { Menu, X, Search } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import Cart from "../pages/Cart";
-import { useDispatch, useSelector } from "react-redux";
-import { logout } from "../redux/authSlice";
 import toast from "react-hot-toast";
+import { useUserStore } from "../zustand/userStore";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState("");
 
   const navigate = useNavigate();
-  const disptach = useDispatch()
 
   const handleSearch = () => {
     navigate(`/shop/?search=${search}`); // http://localhost:5173/shop/?search=seacrh_value
   };
 
-  const { user } = useSelector((state) => state.auth);
+  const { user, logout } = useUserStore()
 
   console.log(user);
 
   const handleLogout = () => {
-     disptach(logout())
+     logout()
      navigate('/login')
      toast.success("Logout sucessful.")
   }
