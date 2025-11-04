@@ -3,24 +3,27 @@ import { useForm } from "react-hook-form";
 import { categoryFormValidationSchema } from "../../utils/validate";
 import { apiRequest } from "../../utils/apiRequest";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
-import { useUserStore } from "../../zustand/userStore";
+import { useLocation, useNavigate } from "react-router-dom";
 
 
-const AddCategoryForm = () => {
+
+const UpdateCategoryForm = () => {
+    const navigate = useNavigate()
+    const location = useLocation()
+
   const {register,handleSubmit,formState:{errors,isSubmitting}} = useForm({
-    resolver: yupResolver(categoryFormValidationSchema)
+    resolver: yupResolver(categoryFormValidationSchema),
+    defaultValues: {
+        name: location?.state?.category?.name || ""
+    }
   })
 
-  const navigate = useNavigate()
-
-  const {user} = useUserStore()
-  console.log(user.access)
+  const id = location?.state?.category?.id  // getting categroy id from uselocation hook
 
   const handleCategorySubmit = async (data) => {
     try {
-      await apiRequest.post('/categories/add/', data)
-      toast.success("Catgeory added sucessfully.")
+      await apiRequest.put(`/categories/update/${id}/`, data)
+      toast.success("Catgeory updated sucessfully.")
       navigate('/dashboard/categories/list')
     } catch (error) {
       console.log(error)
@@ -31,7 +34,7 @@ const AddCategoryForm = () => {
   return (
     <div className="bg-white shadow rounded-lg border border-slate-200 p-6 w-full max-w-4xl">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold text-slate-800">Add Category</h2>
+        <h2 className="text-xl font-semibold text-slate-800">Update Category</h2>
       </div>
       
       <form onSubmit={handleSubmit(handleCategorySubmit)}>
@@ -50,11 +53,11 @@ const AddCategoryForm = () => {
         </div>
 
         <button disabled={isSubmitting} className="btn btn-primary">
-          {isSubmitting ? "submitting..." : "add"}
+          {isSubmitting ? "submitting..." : "update"}
         </button>
       </form>
     </div>
   );
 };
 
-export default AddCategoryForm;
+export default UpdateCategoryForm;

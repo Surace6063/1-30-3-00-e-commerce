@@ -1,8 +1,28 @@
 import { Plus, Edit, Trash2 } from "lucide-react";
 import { useCategories } from "../../api/fetchApi";
+import { apiRequest } from "../../utils/apiRequest";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 const CategoryList = () => {
-  const {data,isLoading,isError,error} = useCategories()
+  const {data,isLoading,isError,error, refetch} = useCategories()
+
+  const navigate = useNavigate()
+
+  const handleCategoryDelete = async (id) => {
+    try {
+      await apiRequest.delete(`/categories/delete/${id}/`)
+      toast.success("Category deleted sucessfully.")
+      refetch()  // refetch catgeory get operation after delete operation
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  // function to handle edit category
+  const handleCategoryEdit = (category) => {
+     navigate('/dashboard/categories/update', {state: {category}})
+  }
 
   return (
     <div className="bg-white shadow rounded-lg border border-slate-200 p-6 overflow-x-auto">
@@ -34,10 +54,10 @@ const CategoryList = () => {
               <td className="px-6 py-3 text-slate-700">{cat.id}</td>
               <td className="px-6 py-3 text-slate-700">{cat.name}</td>
               <td className="px-6 py-3 text-slate-700 flex items-center gap-3">
-                <button className="text-sky-600 hover:text-sky-800 flex items-center gap-1 cursor-pointer">
+                <button onClick={()=>handleCategoryEdit(cat)} className="text-sky-600 hover:text-sky-800 flex items-center gap-1 cursor-pointer">
                   <Edit className="w-4 h-4" /> Edit
                 </button>
-                <button className="text-red-500 hover:text-red-800 flex items-center gap-1 cursor-pointer">
+                <button onClick={()=>handleCategoryDelete(cat.id)} className="text-red-500 hover:text-red-800 flex items-center gap-1 cursor-pointer">
                   <Trash2 className="w-4 h-4" /> Delete
                 </button>
               </td>

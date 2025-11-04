@@ -52,3 +52,37 @@ export const loginFormValidationSchema = yup.object().shape({
   username: yup.string().required("Username is required"),
   password: yup.string().required("Password is required"),
 });
+
+
+// category form validation
+export const categoryFormValidationSchema = yup.object().shape({
+  name: yup.string().required("Category name is required")
+  .min(3,"Name must be atleast 3 charcters.")
+  .max(100,"Name cannot exceed 100 charcters.")
+  // .matches(/^[A-Za-z]+$/, "Only alphabets are allowed")
+  .trim()
+})
+
+
+// product form validation
+export const productFormValidationSchema = yup.object({
+  name: yup.string().required("Product name is required"),
+  category: yup.string().required("Category is required"),
+  price: yup
+    .number()
+    .typeError("Price must be a number")
+    .positive("Price must be positive")
+    .required("Price is required"),
+  stock: yup
+    .number()
+    .typeError("Quantity must be a number")
+    .integer("Quantity must be an integer")
+    .min(1, "Quantity must be at least 1")
+    .required("Quantity is required"),
+  description: yup.string().required("Description is required"),
+
+  image: yup
+    .mixed()
+    .required("Image is required")
+
+});

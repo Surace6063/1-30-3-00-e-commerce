@@ -1,19 +1,25 @@
 import { Plus, Edit, Trash2 } from "lucide-react";
 import { useProducts } from "../../api/fetchApi";
-
-
-
+import { apiRequest } from "../../utils/apiRequest";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 const ProductList = () => {
-  
-  const {data,isLoading,isError,error} = useProducts()
+  const navigate = useNavigate();
+  const { data, isLoading, isError, error, refetch } = useProducts();
 
-  const handleDelete = (id) => {
-    console.log("delete")
+  const handleDelete = async (id) => {
+    try {
+      await apiRequest.delete(`/products/${id}/`);
+      toast.success("Product deleted Successfully.");
+      refetch(); // refetch useProduct() to show updated product list after delete operation
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleEdit = (product) => {
-    alert(`Edit Product: ${product.name}`);
+    navigate("/dashboard/products/update", {state:{product}});
   };
 
   return (
@@ -40,47 +46,50 @@ const ProductList = () => {
           </tr>
         </thead>
         <tbody className="divide-y divide-slate-200">
-          {
-          isLoading ? <tr>
-            <td>loading...</td>
-          </tr>:
-          isError ? <tr>
-            <td>{error.message}</td>
-          </tr>:
-          data.map((p) => (
-            <tr key={p.id} className="hover:bg-slate-50">
-              <td className="px-6 py-3 text-slate-700">{p.id}</td>
-              <td className="px-6 py-3 text-slate-700">
-                <img
-                  src={p.image}
-                  alt={p.name}
-                  className="w-16 h-16 rounded-md object-cover"
-                />
-              </td>
-              <td className="px-6 py-3 text-slate-700">
-                {p.name.length > 20 ? p.name.slice(0, 20) + "..." : p.name}
-              </td>
-              <td className="px-6 py-3 text-slate-700">{p.category}</td>
-              <td className="px-6 py-3 text-slate-700">${p.price}</td>
-              <td className="px-6 py-3 text-slate-700">{p.stock}</td>
-              <td className="px-6 py-3 text-slate-700">
-                <div className="flex gap-4 items-center">
-                    <button
-                  onClick={() => handleEdit(p)}
-                  className="text-sky-600 hover:text-sky-800 flex items-center gap-1 cursor-pointer"
-                >
-                  <Edit className="w-4 h-4" /> Edit
-                </button>
-                <button
-                  onClick={() => handleDelete(p.id)}
-                  className="text-red-500 hover:text-red-800 flex items-center gap-1 cursor-pointer"
-                >
-                  <Trash2 className="w-4 h-4" /> Delete
-                </button>
-                </div>
-              </td>
+          {isLoading ? (
+            <tr>
+              <td>loading...</td>
             </tr>
-          ))}
+          ) : isError ? (
+            <tr>
+              <td>{error.message}</td>
+            </tr>
+          ) : (
+            data.map((p) => (
+              <tr key={p.id} className="hover:bg-slate-50">
+                <td className="px-6 py-3 text-slate-700">{p.id}</td>
+                <td className="px-6 py-3 text-slate-700">
+                  <img
+                    src={p.image}
+                    alt={p.name}
+                    className="w-16 h-16 rounded-md object-cover"
+                  />
+                </td>
+                <td className="px-6 py-3 text-slate-700">
+                  {p.name.length > 20 ? p.name.slice(0, 20) + "..." : p.name}
+                </td>
+                <td className="px-6 py-3 text-slate-700">{p.category}</td>
+                <td className="px-6 py-3 text-slate-700">${p.price}</td>
+                <td className="px-6 py-3 text-slate-700">{p.stock}</td>
+                <td className="px-6 py-3 text-slate-700">
+                  <div className="flex gap-4 items-center">
+                    <button
+                      onClick={() => handleEdit(p)}
+                      className="text-sky-600 hover:text-sky-800 flex items-center gap-1 cursor-pointer"
+                    >
+                      <Edit className="w-4 h-4" /> Edit
+                    </button>
+                    <button
+                      onClick={() => handleDelete(p.id)}
+                      className="text-red-500 hover:text-red-800 flex items-center gap-1 cursor-pointer"
+                    >
+                      <Trash2 className="w-4 h-4" /> Delete
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))
+          )}
           {data?.length === 0 && (
             <tr>
               <td colSpan={7} className="px-6 py-3 text-center text-slate-500">

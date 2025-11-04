@@ -14,6 +14,8 @@ import AddCatgeoryForm from "./pages/adminpages/AddCatgeoryForm";
 import { Toaster } from "react-hot-toast";
 import ProtectedRoute from "./utils/ProtectedRoute";
 import AdminRoute from "./utils/AdminRoute";
+import UpdateCategoryForm from "./pages/adminpages/UpdateCategoryForm";
+import UpdateProductForm from "./pages/adminpages/UpdateProductForm";
 
 const App = () => {
   return (
@@ -45,6 +47,8 @@ const App = () => {
               path="/dashboard/categories/add"
               element={<AddCatgeoryForm />}
             />
+            <Route path="/dashboard/categories/update" element={<UpdateCategoryForm />} />
+            <Route path="/dashboard/products/update" element={<UpdateProductForm />} />
           </Route>
         </Route>
       </Routes>

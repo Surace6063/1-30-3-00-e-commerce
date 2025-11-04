@@ -6,14 +6,18 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { productFormValidationSchema } from "../../utils/validate";
 import { apiRequest } from "../../utils/apiRequest";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
-const AddProductForm = () => {
+const UpdateProductForm = () => {
   const navigate = useNavigate()
+  const location = useLocation()
+  const product =  location?.state?.product
+
+  console.log(location)
 
   const { data } = useCategories();
 
-  const [preview, setPreview] = useState(null);
+  const [preview, setPreview] = useState(product?.image || null);
 
   const handleImageChange = (e) => {
     const file = e.target.files?.[0];
@@ -28,7 +32,14 @@ const AddProductForm = () => {
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm({
-    resolver: yupResolver(productFormValidationSchema)
+    resolver: yupResolver(productFormValidationSchema),
+    defaultValues: {
+        name: product?.name,
+        category: product?.category,
+        description: product?.description,
+        price: product?.price,
+        stock: product?.stock,
+    }
   });
 
   const handleProductSubmit = async (data) => {
@@ -41,13 +52,15 @@ const AddProductForm = () => {
     
     if(data.image && data.image[0]){
       formData.append('image',data.image[0])
+    }else{
+        formData.append('image',product?.image)
     }
 
     console.log(formData)
 
     try {
-      await apiRequest.post('/products/',formData)
-      toast.success("Product added sucessfully.")
+      await apiRequest.patch(`/products/${product?.id}/`,formData)
+      toast.success("Product updated sucessfully.")
       navigate('/dashboard/products/list')
     } catch (error) {
       console.log(error)
@@ -57,7 +70,7 @@ const AddProductForm = () => {
   return (
     <div className="bg-white shadow rounded-lg border border-slate-200 p-6 max-w-5xl w-full">
       <h2 className="text-2xl font-semibold text-slate-800 mb-6">
-        Add Product
+        Update Product
       </h2>
 
       <form onSubmit={handleSubmit(handleProductSubmit)} className="space-y-6">
@@ -193,7 +206,7 @@ const AddProductForm = () => {
           className="bg-slate-800 text-white rounded-md w-full py-3 hover:bg-slate-700 transition"
         >
          {
-          isSubmitting ? "submitting..." : "Add Product"
+          isSubmitting ? "submitting..." : "Update Product"
          }
         </button>
       </form>
@@ -201,4 +214,4 @@ const AddProductForm = () => {
   );
 };
 
-export default AddProductForm;
+export default UpdateProductForm;
