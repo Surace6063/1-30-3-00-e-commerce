@@ -11,7 +11,10 @@ urlpatterns = [
     path('api/', include('store.urls')),
 
     # users app url
-    path('api/auth/', include('users.urls')) 
+    path('api/auth/', include('users.urls')),
+
+    # cart app url
+    path('api/cart/',include('cart.urls')), 
 ]
 
 

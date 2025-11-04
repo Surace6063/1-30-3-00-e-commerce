@@ -10,7 +10,6 @@ class CategorySerializer(serializers.ModelSerializer):
 
 # product serializer
 class ProductSerializer(serializers.ModelSerializer):
-    category = serializers.StringRelatedField()  # shows category name instead of id
     class Meta:
         model = Product
         fields = "__all__"

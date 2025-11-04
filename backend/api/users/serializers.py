@@ -57,7 +57,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         data['email'] = self.user.email
         data['first_name'] = self.user.first_name
         data['last_name'] = self.user.last_name
-        data['admin'] = self.user.is_staff
+        data['admin'] = self.user.is_staff or self.user.is_superuser
 
         return data
     
