@@ -3,8 +3,8 @@ import AdminSibeBar from "../components/admin/AdminSibeBar";
 
 const AdminLayout = () => {
   return (
-    <div className="flex gap-16">
-      <div className="sticky top-0">
+    <div className="md:flex md:gap-16">
+      <div className="sticky top-0 h-full">
         <AdminSibeBar />
       </div>
       <div className="my-10 flex-1 pr-10">
