@@ -25,7 +25,13 @@ const Login = () => {
       console.log(response.data);
       login(response.data)
       toast.success("Login successful!");
-      navigate("/");
+
+      if(response.data.admin){
+        navigate('/dashboard/main')
+      }else{
+        navigate("/");
+      }
+      
     } catch (err) {
       console.log(err);
 
