@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useProduct } from "../api/fetchApi";
+import { apiRequest } from "../utils/apiRequest";
+import toast from "react-hot-toast";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const ProductDetailPage = () => {
   const [quantity, setQuantity] = useState(1);
@@ -12,11 +15,33 @@ const ProductDetailPage = () => {
 
   const {data,isLoading,isError,error} = useProduct(id)
 
+  const queryClient = useQueryClient()
+
+    // using tanstack usemutation to handle add to cart
+  const {mutate} = useMutation({
+    mutationFn: async (cartItem) => {
+      return await apiRequest.post('/cart/create/',cartItem)
+    },
+    onSuccess: () => {
+      toast.success("Product added to cart sucessfully.")
+      queryClient.invalidateQueries({queryKey:['cart']}) // invlaidte cart cache -> tell cart fetch api process to refetch new updated cart list 
+    }
+  })
+
+  // add to cart function
+  const handleAddToCart = async () => {
+    const cartItem = {
+      product_id: id,
+      quantity: quantity
+    }
+
+    mutate(cartItem)  // calling useMuatation mutate function
+  } 
+
+
   if(isLoading) return "loading..."
   if(isError) return <p>{error.message}</p>
-
-  console.log(data);
-
+  
   return (
     <div className="min-h-[90vh] flex items-center justify-center p-6">
       <div className="flex flex-col md:flex-row gap-12 bg-white rounded-3xl overflow-hidden container w-full">
@@ -71,7 +96,7 @@ const ProductDetailPage = () => {
                 +
               </button>
             </div>
-            <button className="btn btn-secondary">
+            <button onClick={handleAddToCart} className="btn btn-primary">
               Add to Cart
             </button>
           </div>

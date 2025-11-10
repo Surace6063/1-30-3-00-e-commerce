@@ -16,6 +16,7 @@ import ProtectedRoute from "./utils/ProtectedRoute";
 import AdminRoute from "./utils/AdminRoute";
 import UpdateCategoryForm from "./pages/adminpages/UpdateCategoryForm";
 import UpdateProductForm from "./pages/adminpages/UpdateProductForm";
+import CheckOut from "./pages/CheckOut";
 
 const App = () => {
   return (
@@ -28,6 +29,11 @@ const App = () => {
           <Route path="/shop/:id" element={<ProductDetailPage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Regsiter />} />
+
+          {/* protected route */}
+          <Route element={<ProtectedRoute />}>
+             <Route path="/checkout" element={<CheckOut />} />
+          </Route>
         </Route>
 
         {/* admin layout */}

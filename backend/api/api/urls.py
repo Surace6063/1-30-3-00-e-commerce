@@ -15,6 +15,10 @@ urlpatterns = [
 
     # cart app url
     path('api/cart/',include('cart.urls')), 
+    
+    # order app url
+    path('api/',include('orders.urls'))
+
 ]
 
 

@@ -9,6 +9,7 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState("");
 
+
   const navigate = useNavigate();
 
   const handleSearch = () => {
