@@ -86,3 +86,27 @@ export const productFormValidationSchema = yup.object({
     .required("Image is required")
 
 });
+
+
+// checkout form validation
+export const checkoutSchema = yup.object().shape({
+  payment: yup
+    .string()
+    .oneOf(["cod", "e-sewa"], "Invalid payment method")
+    .required("Payment method is required"),
+
+  full_name: yup
+    .string()
+    .required("Full name is required")
+    .min(3, "Full name must be at least 3 characters"),
+
+  phone: yup
+    .string()
+    .required("Phone number is required")
+    .matches(/^[0-9]{10}$/, "Phone number must be 10 digits"),
+
+  shipping_address: yup
+    .string()
+    .required("Shipping address is required")
+    .min(5, "Address must be at least 5 characters"),
+});
