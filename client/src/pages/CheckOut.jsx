@@ -4,11 +4,22 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { checkoutSchema } from "../utils/validate";
 import { apiRequest } from "../utils/apiRequest";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useEffect } from "react";
 
 const CheckOut = () => {
   const { cart, total_price } = useCartStore();
+
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
+
+  useEffect(()=>{
+    if(!cart || cart.length == 0){
+      toast.error('Please add atleast one item in cart!')
+      navigate('/shop')
+    }
+  },[cart,navigate])
 
   // console.log(cart);
 
@@ -28,20 +39,32 @@ const CheckOut = () => {
     resolver: yupResolver(checkoutSchema),
   });
 
+  
+  const {mutate} = useMutation({
+    mutationFn: async (orderData) => {
+      const res = await apiRequest.post('/orders/',orderData)
+      return res.data
+    },
+    onSuccess: (data,orderData) => {
+
+      if(orderData.payment == 'e-sewa'){
+        navigate('/esewa/form',{state:{esewaData:data}})
+      }else{
+          navigate('/orders')
+      }
+      console.log(data)
+      toast.success('order created sucessfully.')
+      queryClient.invalidateQueries(['cart']) // refetch cart list after order is created
+    }
+  })
+
   const handleOrder = async (data) => {
     const orderData = {
       ...data,
       items
     }
 
-    try {
-      await apiRequest.post('/orders/',orderData)
-      toast.success("Order sucessfull.")
-      navigate('/orders')
-    } catch (error) {
-      console.log(error)
-    }
-   
+    mutate(orderData)
   };
 
   return (

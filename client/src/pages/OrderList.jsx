@@ -57,7 +57,8 @@ const OrderList = () => {
                   <td className="py-3 px-4">{order.phone}</td>
                   <td className="py-3 px-4 capitalize">{order.payment}</td>
                   <td className="py-3 px-4">
-                    <span className="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-xs font-semibold">
+                    <span className={`px-2 py-1 rounded text-xs font-semibold text-white
+                      ${order.status == "pending" ? "bg-yellow-300" : "bg-green-400"  }`}>
                       {order.status}
                     </span>
                   </td>

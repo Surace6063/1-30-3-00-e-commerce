@@ -18,6 +18,8 @@ import UpdateCategoryForm from "./pages/adminpages/UpdateCategoryForm";
 import UpdateProductForm from "./pages/adminpages/UpdateProductForm";
 import CheckOut from "./pages/CheckOut";
 import OrderList from "./pages/OrderList";
+import EsewaForm from "./pages/EsewaForm";
+import EsewaSuccessPage from "./pages/EsewaSuccessPage";
 
 const App = () => {
   return (
@@ -35,6 +37,8 @@ const App = () => {
           <Route element={<ProtectedRoute />}>
              <Route path="/checkout" element={<CheckOut />} />
              <Route path="/orders" element={<OrderList />} />
+             <Route path="/esewa/form" element={<EsewaForm />} />
+             <Route path="/esewa/success/:id" element={<EsewaSuccessPage />} />
           </Route>
         </Route>
 

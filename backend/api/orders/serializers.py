@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import Order, OrderItem
+from cart.models import Cart
 
 class OrderItemSerializer(serializers.ModelSerializer):
     product_name = serializers.CharField(source="product.name",read_only=True)
@@ -31,8 +32,8 @@ class OrderSerializer(serializers.ModelSerializer):
         for item_data in items_data:
             OrderItem.objects.create(order=order,**item_data)
             
-        if payment_method == 'e-sewa':
-            pass    
+        # delete cart item after order is created
+        Cart.objects.filter(user=user).delete()  
             
         return order    
         

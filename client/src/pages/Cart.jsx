@@ -66,6 +66,13 @@ const Cart = () => {
    setOpen(true)
   }
 
+  // handle checkout
+  // const handleCheckOut = () => {
+  //   if(!data){
+  //     return false
+  //   }
+  // }
+
   return (
     <div>
       <button
